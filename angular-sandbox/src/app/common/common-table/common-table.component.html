@@ -1,19 +1,41 @@
-<table>
-  <caption>A description of the table's content</caption>
-  <thead>
-    <tr>
-      <th scope="col">Header 1</th>
-      <th scope="col">Header 2</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Data 1</td>
-      <td>Data 2</td>
-    </tr>
-    <tr>
-      <td>Data 3</td>
-      <td>Data 4</td>
-    </tr>
-  </tbody>
-</table>
+<!-- <p-sidebar
+  [(visible)]="selectedItem"
+   position="right"
+   [modal]="true"
+   [showCloseIcon]="true">
+  <h2>Selected Item</h2>
+  <p>Header 1: {{selectedItem?.Header1}}</p>
+  <p>Header 2: {{selectedItem?.Header2}}</p>
+</p-sidebar> -->
+
+<cdk-virtual-scroll-viewport
+  itemSize="50"
+  class="example-viewport"
+  (scrolledIndexChange)="checkIfLastItem($event)">
+  <table>
+    <caption>A description of the table's content</caption>
+    <thead>
+      <tr>
+        <th scope="col">Header 1</th>
+        <th scope="col">Header 2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *cdkVirtualFor="let item of currentPage">
+        <tr (click)="selectItem(item)">
+          <td>{{item.Header1}}</td>
+          <td>{{item.Header2}}</td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</cdk-virtual-scroll-viewport>
+
+<div class="sidebar" *ngIf="selectedItem">
+  <h2>Selected Item</h2>
+  <p>Header 1: {{selectedItem.Header1}}</p>
+  <p>Header 2: {{selectedItem.Header2}}</p>
+</div>
+
+<button (click)="previousPage()" [disabled]="pageIndex === 0">Previous page</button>
+<button (click)="nextPage()" [disabled]="pageIndex >= tableData.length / pageSize - 1">Next page</button>
